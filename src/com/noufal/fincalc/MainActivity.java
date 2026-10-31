@@ -59,6 +59,10 @@ public class MainActivity extends Activity {
     private Spinner spLoanType;
     private TextView tvLoanResult;
 
+    // Installment-plan fields
+    private EditText etPlanAmount, etPlanFee1, etPlanRate3, etPlanRate6;
+    private TextView tvPlanResult;
+
     // Percent tab fields
     private EditText etP1Percent, etP1Of, etP2Value, etP2Total, etP3From, etP3To;
     private TextView tvP1Result, tvP2Result, tvP3Result;
@@ -345,7 +349,70 @@ public class MainActivity extends Activity {
         });
         c1.addView(sched);
         col.addView(c1);
+
+        LinearLayout c2 = card();
+        c2.addView(cardTitle("Installment Plans"));
+        c2.addView(label("Loan amount"));
+        etPlanAmount = input("e.g. 1500");
+        c2.addView(etPlanAmount);
+        c2.addView(label("1-month plan fee (%)"));
+        etPlanFee1 = input("4");
+        etPlanFee1.setText("4");
+        c2.addView(etPlanFee1);
+        c2.addView(label("3-month plan rate (% per month)"));
+        etPlanRate3 = input("4.44");
+        etPlanRate3.setText("4.44");
+        c2.addView(etPlanRate3);
+        c2.addView(label("6-month plan rate (% per month)"));
+        etPlanRate6 = input("6.26");
+        etPlanRate6.setText("6.26");
+        c2.addView(etPlanRate6);
+        Button plans = actionButton("Show installment options");
+        plans.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) { calculatePlans(); }
+        });
+        c2.addView(plans);
+        tvPlanResult = resultText();
+        c2.addView(tvPlanResult);
+        col.addView(c2);
         return scrollWrap(col);
+    }
+
+    private double emiOf(double p, double monthlyRatePct, int months) {
+        double r = monthlyRatePct / 100.0;
+        if (r == 0) return p / months;
+        double f = Math.pow(1 + r, months);
+        return p * r * f / (f - 1);
+    }
+
+    private void calculatePlans() {
+        Double p = parse(etPlanAmount);
+        Double fee1 = parse(etPlanFee1);
+        Double r3 = parse(etPlanRate3);
+        Double r6 = parse(etPlanRate6);
+        if (p == null) {
+            toast("Enter the loan amount");
+            return;
+        }
+        if (fee1 == null) fee1 = 4.0;
+        if (r3 == null) r3 = 4.44;
+        if (r6 == null) r6 = 6.26;
+        double onePay = p * (1 + fee1 / 100.0);
+        double m3 = emiOf(p, r3, 3);
+        double m6 = emiOf(p, r6, 6);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Your loan:  ").append(fmt2.format(p)).append("\n\n");
+        sb.append("1 Month Installment:  ").append(fmt2.format(onePay))
+          .append("  (single payment)\n");
+        sb.append("   Total: ").append(fmt2.format(onePay))
+          .append(" · Extra: ").append(fmt2.format(onePay - p)).append("\n\n");
+        sb.append("3 Months Installment:  ").append(fmt2.format(m3)).append(" /month\n");
+        sb.append("   Total: ").append(fmt2.format(m3 * 3))
+          .append(" · Extra: ").append(fmt2.format(m3 * 3 - p)).append("\n\n");
+        sb.append("6 Months Installment:  ").append(fmt2.format(m6)).append(" /month\n");
+        sb.append("   Total: ").append(fmt2.format(m6 * 6))
+          .append(" · Extra: ").append(fmt2.format(m6 * 6 - p));
+        tvPlanResult.setText(sb.toString());
     }
 
     private void calculateLoan() {

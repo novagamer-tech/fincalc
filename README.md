@@ -12,7 +12,7 @@ A small, ad-free Android finance calculator in a single Java file — no Android
 - **Live Currency Converter** — 25 currencies (AED, INR, USD, EUR, GBP, SAR, QAR, KWD…) with rates from [open.er-api.com](https://open.er-api.com), swap button, and offline caching of the last fetched rates
 - **Live Gold Rates** — spot gold from [gold-api.com](https://gold-api.com): per-gram prices for 24K / 22K / 21K / 18K, per-ounce and per-tola (24K), in a selectable currency, plus a grams + karat value calculator. Last price is cached for offline use.
 
-Requires Android 8.0 (API 26) or newer. Internet is used only for the currency and gold rates.
+Requires Android 13 (API 33) or newer. Internet is used only for the currency and gold rates.
 
 ## Build
 

@@ -607,6 +607,12 @@ public class MainActivity extends Activity {
 
         LinearLayout c1 = card();
         c1.addView(cardTitle("Live Currency Converter"));
+        TextView srcCur = resultText();
+        srcCur.setTextSize(13);
+        srcCur.setTextColor(MUTED);
+        srcCur.setPadding(0, dp(2), 0, 0);
+        srcCur.setText("Source: open.er-api.com (ExchangeRate API — USD base, refreshed daily)");
+        c1.addView(srcCur);
         c1.addView(label("Amount"));
         etCurAmount = input("e.g. 100");
         etCurAmount.setText("1");
@@ -766,6 +772,12 @@ public class MainActivity extends Activity {
 
         LinearLayout c1 = card();
         c1.addView(cardTitle("Live Gold Rate"));
+        TextView srcGold = resultText();
+        srcGold.setTextSize(13);
+        srcGold.setTextColor(MUTED);
+        srcGold.setPadding(0, dp(2), 0, 0);
+        srcGold.setText("Source: gold-api.com (live spot price, USD per troy ounce)");
+        c1.addView(srcGold);
         c1.addView(label("Show prices in"));
         spGoldCurrency = currencySpinner(0); // AED default
         spGoldCurrency.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
